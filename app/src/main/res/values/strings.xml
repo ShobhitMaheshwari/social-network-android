@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SocialNetwork</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_search">Search People</string>
 </resources>
