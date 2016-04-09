@@ -77,6 +77,18 @@
                 android:gravity="center"
                 android:onClick="goSignupActivity"
                 android:textSize="16dip"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Username of Password is not correct"
+                android:id="@+id/textView2"
+                android:layout_alignBottom="@+id/scrollView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="112dp"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

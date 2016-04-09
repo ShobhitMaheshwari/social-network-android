@@ -17,6 +17,9 @@ public class User extends BaseModel{
 	@SerializedName("username")
 	@Expose
 	private String username;
+    @SerializedName("first_name")
+    @Expose
+    private String name;
 	@SerializedName("password")
 	@Expose
 	private String password;
@@ -54,6 +57,20 @@ public class User extends BaseModel{
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+    /**
+     * @return The name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name The name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
 
 	/**
 	 * @return The password
