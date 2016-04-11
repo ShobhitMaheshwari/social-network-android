@@ -29,7 +29,8 @@
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/itemName"
-
+            android:textStyle="italic"
+            android:textColor="@color/colorRed"
             android:layout_weight=".5" />
         <com.example.com.socialnetwork.view.DurationTextView
             android:id="@+id/itemDate"

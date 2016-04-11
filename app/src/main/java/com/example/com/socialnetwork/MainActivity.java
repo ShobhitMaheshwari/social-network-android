@@ -110,9 +110,9 @@ public class MainActivity extends AppCompatActivity implements UserServiceInterf
 				switchActivity(LoginActivity.class);
 				return true;
 			}
-			case R.id.action_search:
-//				handleMenuSearch();
-				return true;
+//			case R.id.action_search:
+////				handleMenuSearch();
+//				return true;
 			case android.R.id.home:
 				mDrawerLayout.openDrawer(GravityCompat.START);
 				return true;

@@ -21,14 +21,14 @@
             layout="@layout/toolbar"
             ></include>
 
-        <LinearLayout
+        <FrameLayout
             android:orientation="vertical"
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/tool_bar">
 
-        </LinearLayout>
+        </FrameLayout>
 
 
     </RelativeLayout>

@@ -111,15 +111,28 @@ public class ApplicationData {
 
 	public List<User> getUnknown(){
 		List<User> possibleUnknown = getUsers();
+
 		for(Iterator<User> iter = possibleUnknown.listIterator(); iter.hasNext(); ){
 			User u = iter.next();
 			for (Friendship friendship: friendshipList){
-				if(friendship.getCreator().equals(u.getUsername()) || friendship.getFriend() == u.getId()){
+				if(friendship.getCreator().equals(getCurrentUser().getUsername()) && friendship.getFriend() == u.getId()){
 					iter.remove();
 					break;
 				}
 			}
 		}
+
+		for(Iterator<User> iter = possibleUnknown.listIterator(); iter.hasNext(); ){
+			User u = iter.next();
+			for (Friendship friendship: friendshipList){
+				if(friendship.getCreator().equals(u.getUsername()) && friendship.getFriend() == getCurrentUser().getId()){
+					iter.remove();
+					break;
+				}
+			}
+		}
+
+
 		for(Iterator<User> iter = possibleUnknown.listIterator(); iter.hasNext(); ){
 			User u = iter.next();
 			if(u.getId() == getCurrentUser().getId())
