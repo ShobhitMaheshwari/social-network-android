@@ -87,14 +87,14 @@ public class WebService {
 			.build();
 
 	Retrofit retrofit = new Retrofit.Builder()
-			.baseUrl("http://192.168.0.26:5000/snippetapp/")
-//            .baseUrl("https://serene-reef-32806.herokuapp.com/snippetapp/")
+//			.baseUrl("http://192.168.0.26:5000/snippetapp/")
+            .baseUrl("https://serene-reef-32806.herokuapp.com/snippetapp/")
 			.addConverterFactory(GsonConverterFactory.create())
 			.client(httpClient)
 			.build();
 	Retrofit registerRetrofit = new Retrofit.Builder()
-			.baseUrl("http://192.168.0.26:5000/snippetapp/")
-//            .baseUrl("https://serene-reef-32806.herokuapp.com/snippetapp/")
+//			.baseUrl("http://192.168.0.26:5000/snippetapp/")
+            .baseUrl("https://serene-reef-32806.herokuapp.com/snippetapp/")
 			.addConverterFactory(GsonConverterFactory.create())
 			.client(registerClient)
 			.build();
