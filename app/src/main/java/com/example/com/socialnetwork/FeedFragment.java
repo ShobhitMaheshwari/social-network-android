@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,6 +39,8 @@ import retrofit2.Response;
  * Created by shobhit on 4/10/16.
  */
 public class FeedFragment extends Fragment {
+
+	public static String LOG_TAG = "My log tag";
 
 	private MyAdapter aa;
 	private ArrayList<Snippet> aList;
@@ -109,9 +112,11 @@ public class FeedFragment extends Fragment {
 			snippet.setMessage(message.getText().toString());
 			snippet.setTitle(title.getText().toString());
 			Call<Snippet> call = webService.snippetService.postSnippet(snippet);
+			hideKeyboard();
 			call.enqueue(new Callback<Snippet>() {
 				@Override
 				public void onResponse(Response<Snippet> response) {
+					Log.d(LOG_TAG, "Pushing");
 					Snippet snippet1 = response.body();
 					aList.add(snippet1);
 					Collections.sort(aList, new Comparator<Snippet>() {
@@ -130,5 +135,15 @@ public class FeedFragment extends Fragment {
 				}
 			});
 		}
+	}
+
+	private void hideKeyboard(){
+		InputMethodManager inputManager =
+				(InputMethodManager) getActivity().
+						getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(
+				getActivity().getCurrentFocus().getWindowToken(),
+				InputMethodManager.HIDE_NOT_ALWAYS);
+
 	}
 }

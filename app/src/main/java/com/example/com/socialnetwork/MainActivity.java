@@ -1,5 +1,6 @@
 package com.example.com.socialnetwork;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -47,14 +49,12 @@ public class MainActivity extends AppCompatActivity implements UserServiceInterf
 
 	public static String LOG_TAG = "My log tag";
 
-	private Toolbar toolbar;
-	private MenuItem mSearchAction;
-	private boolean isSearchOpened = false;
-	private EditText edtSeach;
-
-
+//	private Toolbar toolbar;
+//	private MenuItem mSearchAction;
+//	private boolean isSearchOpened = false;
+//	private EditText edtSeach;
+//	private NavigationView navigationView;
 	private DrawerLayout mDrawerLayout;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements UserServiceInterf
 				return true;
 			}
 			case R.id.action_search:
-				handleMenuSearch();
+//				handleMenuSearch();
 				return true;
 			case android.R.id.home:
 				mDrawerLayout.openDrawer(GravityCompat.START);
@@ -129,81 +129,81 @@ public class MainActivity extends AppCompatActivity implements UserServiceInterf
 		return true;
 	}
 
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		mSearchAction = menu.findItem(R.id.action_search);
-		return super.onPrepareOptionsMenu(menu);
-	}
+//	@Override
+//	public boolean onPrepareOptionsMenu(Menu menu) {
+//		mSearchAction = menu.findItem(R.id.action_search);
+//		return super.onPrepareOptionsMenu(menu);
+//	}
 
 	private void switchActivity(Class<?> cls){
 		Intent i = new Intent(getApplicationContext(), cls);
 		startActivity(i);
 	}
 
-	protected void handleMenuSearch(){
-		ActionBar action = getSupportActionBar(); //get the actionbar
+//	protected void handleMenuSearch(){
+//		ActionBar action = getSupportActionBar(); //get the actionbar
+//
+//		if(isSearchOpened){ //test if the search is open
+//
+//			action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
+//			action.setDisplayShowTitleEnabled(true); //show the title in the action bar
+//
+//			//hides the keyboard
+//			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//			imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
+//
+//			//add the search icon in the action bar
+//			mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_open_search));
+//
+//			isSearchOpened = false;
+//		} else { //open the search entry
+//
+//			action.setDisplayShowCustomEnabled(true); //enable it to display a
+//			// custom view in the action bar.
+//			action.setCustomView(R.layout.search_bar);//add the custom view
+//			action.setDisplayShowTitleEnabled(false); //hide the title
+//
+//			edtSeach = (EditText)action.getCustomView().findViewById(R.id.edtSearch); //the text editor
+//
+//			//this is a listener to do a search when the user clicks on search button
+//			edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+//				@Override
+//				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+//					if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+//						doSearch();
+//						return true;
+//					}
+//					return false;
+//				}
+//			});
+//
+//
+//			edtSeach.requestFocus();
+//
+//			//open the keyboard focused in the edtSearch
+//			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//			imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+//
+//
+//			//add the close icon
+//			mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_close_search));
+//
+//			isSearchOpened = true;
+//		}
+//	}
 
-		if(isSearchOpened){ //test if the search is open
+//	@Override
+//	public void onBackPressed() {
+//		if(isSearchOpened) {
+//			handleMenuSearch();
+//			return;
+//		}
+//		super.onBackPressed();
+//	}
 
-			action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
-			action.setDisplayShowTitleEnabled(true); //show the title in the action bar
-
-			//hides the keyboard
-			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
-
-			//add the search icon in the action bar
-			mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_open_search));
-
-			isSearchOpened = false;
-		} else { //open the search entry
-
-			action.setDisplayShowCustomEnabled(true); //enable it to display a
-			// custom view in the action bar.
-			action.setCustomView(R.layout.search_bar);//add the custom view
-			action.setDisplayShowTitleEnabled(false); //hide the title
-
-			edtSeach = (EditText)action.getCustomView().findViewById(R.id.edtSearch); //the text editor
-
-			//this is a listener to do a search when the user clicks on search button
-			edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-				@Override
-				public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-					if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-						doSearch();
-						return true;
-					}
-					return false;
-				}
-			});
-
-
-			edtSeach.requestFocus();
-
-			//open the keyboard focused in the edtSearch
-			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
-
-
-			//add the close icon
-			mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_close_search));
-
-			isSearchOpened = true;
-		}
-	}
-
-	@Override
-	public void onBackPressed() {
-		if(isSearchOpened) {
-			handleMenuSearch();
-			return;
-		}
-		super.onBackPressed();
-	}
-
-	private void doSearch() {
-
-	}
+//	private void doSearch() {
+//
+//	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	@Override
@@ -246,6 +246,22 @@ public class MainActivity extends AppCompatActivity implements UserServiceInterf
 					public boolean onNavigationItemSelected(MenuItem menuItem) {
 						menuItem.setChecked(true);
 						mDrawerLayout.closeDrawers();
+						Fragment f;
+						switch (menuItem.getItemId()){
+							case R.id.navigation_item_home:
+								f = new FeedFragment();
+								break;
+							case R.id.navigation_item_friends:
+								f = new FriendFragment();
+								break;
+							default:
+								f = new FeedFragment();
+
+						}
+						FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+						fragmentTransaction.replace(R.id.fragment_container, f);
+						fragmentTransaction.commit();
+//						return false;
 						return true;
 					}
 				});

@@ -140,7 +140,9 @@ public class WebService {
 
 	public interface FriendServiceInterface{
 		@POST("friends/")
-		Call<Friendship> postFriendRequest(@Field("friend") String friend);
+		Call<Friendship> postFriendRequest(@Body Friendship friendship);
+		@GET("friends/")
+		Call<List<Friendship>> getFriendRequests();
 	}
 
 	public interface LoginServiceInterface{

@@ -20,6 +20,9 @@ public class Friendship extends BaseModel{
 	@SerializedName("friend")
 	@Expose
 	private Integer friend;
+	@SerializedName("creator")
+	@Expose
+	private String creator;
 	@SerializedName("approved")
 	@Expose
 	private Boolean approved;
@@ -50,6 +53,20 @@ public class Friendship extends BaseModel{
 	 */
 	public void setCreated(String created) {
 		this.created = created;
+	}
+
+	/**
+	 * @return The creator
+	 */
+	public String getCreator() {
+		return creator;
+	}
+
+	/**
+	 * @param creator The friend
+	 */
+	public void setCreator(String creator) {
+		this.creator = creator;
 	}
 
 	/**
