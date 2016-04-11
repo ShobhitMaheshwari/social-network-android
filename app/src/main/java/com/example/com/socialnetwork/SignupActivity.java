@@ -2,21 +2,15 @@ package com.example.com.socialnetwork;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.com.socialnetwork.model.User;
 import com.example.com.socialnetwork.ws.WebService;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
 import retrofit2.Call;
@@ -58,13 +52,11 @@ public class SignupActivity extends AppCompatActivity {
 		final String name = ((EditText) findViewById(R.id.input_name)).getText().toString();
 
 		if (isValid()) {
-			WebService webService = new WebService();
+			final WebService webService = new WebService(getApplicationContext(), email, password);
 			User user = new User();
 			user.setName(name);
 			user.setUsername(email);
 			user.setPassword(password);
-			webService.username = email;
-			webService.password = password;
 			Call<User> queryResponseCall =
 					webService.userServiceRegister.postUser(user);
 			//Call retrofit asynchronously
@@ -72,19 +64,13 @@ public class SignupActivity extends AppCompatActivity {
 				@Override
 				public void onResponse(Response<User> response) {
                     if (response.code() == 201) {
-                        Log.i(LOG_TAG, "recieved");
-                        SharedPreferences.Editor editor = getSharedPreferences("your_file_name", MODE_PRIVATE).edit();
-                        editor.putBoolean("loggedin", true);
-                        editor.putString("username", email);
-                        editor.putString("password", password);
-                        editor.commit();
+                        webService.saveCredentials();
                         //switch intent
-                        Log.i(LOG_TAG, "Changing Activity to main after logging");
                         switchActivity(MainActivity.class);
+                        ApplicationData.getInstance().setCurrentUser(response.body());
                     }
                     else{
-//                        TextView textView = (TextView) findViewById(R.id.textView2);
-//                        textView.setVisibility(View.VISIBLE);
+                        webService.clearCredentials();
                         EditText emailEditText = (EditText) findViewById(R.id.input_email);
                         emailEditText.setError("Email already exists");
                     }

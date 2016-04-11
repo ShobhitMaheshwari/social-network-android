@@ -19,9 +19,12 @@ public class Snippet extends BaseModel{
 	@SerializedName("message")
 	@Expose
 	private String message;
-	@SerializedName("created")
+	@SerializedName("starttime")
 	@Expose
-	private String created;
+	private Integer starttime;
+	@SerializedName("owner")
+	@Expose
+	private String owner;
 
 	/**
 	 * @return The id
@@ -66,17 +69,35 @@ public class Snippet extends BaseModel{
 	}
 
 	/**
-	 * @return The created
+	 * @return The starttime
 	 */
-	public String getCreated() {
-		return created;
+	public Integer getStarttime() {
+		return starttime;
 	}
 
 	/**
-	 * @param created The created
+	 * @param starttime The starttime
 	 */
-	public void setCreated(String created) {
-		this.created = created;
+	public void setStarttime(Integer starttime) {
+		this.starttime = starttime;
+	}
+
+	/**
+	 *
+	 * @return
+	 * The owner
+	 */
+	public String getOwner() {
+		return owner;
+	}
+
+	/**
+	 *
+	 * @param owner
+	 * The owner
+	 */
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 
 }

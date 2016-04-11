@@ -131,6 +131,9 @@ public class WebService {
 		@GET("users/")
 		Call<List<User>> getUsers();
 
+        @GET("user/")
+        Call<User> getUser(int id);
+
 		@POST("users/")
 		Call<User> postUser(@Body User user);
 	}
@@ -142,10 +145,22 @@ public class WebService {
 
 	public interface LoginServiceInterface{
 		@GET("login/")
-		Call<List<User>> getUsers();
+		Call<User> getUser();
 	}
 
     public void saveCredentials(){
+        SharedPreferences.Editor editor = context.getSharedPreferences("your_file_name", context.MODE_PRIVATE).edit();
+        editor.putBoolean("loggedin", true);
+        editor.putString("username", username);
+        editor.putString("password", password);
+        editor.commit();
+    }
 
+    public void clearCredentials(){
+        SharedPreferences.Editor editor = context.getSharedPreferences("your_file_name", context.MODE_PRIVATE).edit();
+        editor.putBoolean("loggedin", false);
+        editor.remove("username");
+        editor.remove("password");
+        editor.commit();
     }
 }

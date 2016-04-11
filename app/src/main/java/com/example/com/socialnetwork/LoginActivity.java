@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.example.com.socialnetwork.model.User;
 import com.example.com.socialnetwork.ws.WebService;
 
-import java.util.List;
 import java.util.regex.Pattern;
 
 import retrofit2.Call;
@@ -84,28 +83,24 @@ public class LoginActivity extends AppCompatActivity {
 		final String password = ((EditText) findViewById(R.id.input_password)).getText().toString();
 
 		if (isValid()) {
-			WebService webService = new WebService(getApplicationContext(), email, password);
+			final WebService webService = new WebService(getApplicationContext(), email, password);
 			User user = new User();
 			user.setUsername(email);
 			user.setPassword(password);
-			Call<List<User>> queryResponseCall =
-					webService.loginService.getUsers();
+			Call<User> queryResponseCall =
+					webService.loginService.getUser();
 			//Call retrofit asynchronously
-			queryResponseCall.enqueue(new Callback<List<User>>() {
+			queryResponseCall.enqueue(new Callback<User>() {
 				@Override
-				public void onResponse(Response<List<User>> response) {
+				public void onResponse(Response<User> response) {
 					if (response.code() == 200) {
 
-						SharedPreferences.Editor editor = getSharedPreferences("your_file_name", MODE_PRIVATE).edit();
-						editor.putBoolean("loggedin", true);
-						editor.putString("username", email);
-						editor.putString("password", password);
-						editor.commit();
-						//switch intent
-						Log.i(LOG_TAG, "Changing Activity to main after logging");
+						webService.saveCredentials();
+                        ApplicationData.getInstance().setCurrentUser(response.body());
 						switchActivity(MainActivity.class);
 					}
                     else{
+                        webService.clearCredentials();
                         TextView textView = (TextView) findViewById(R.id.textView2);
                         textView.setVisibility(View.VISIBLE);
                     }

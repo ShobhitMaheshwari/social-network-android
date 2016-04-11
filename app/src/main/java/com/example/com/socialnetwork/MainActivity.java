@@ -11,19 +11,33 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.com.socialnetwork.model.Snippet;
 import com.example.com.socialnetwork.model.User;
+import com.example.com.socialnetwork.ws.UserService;
+import com.example.com.socialnetwork.ws.UserServiceInterface;
+import com.example.com.socialnetwork.ws.WebService;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UserServiceInterface {
 
 	public static String LOG_TAG = "My log tag";
 
@@ -31,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
 	private MenuItem mSearchAction;
 	private boolean isSearchOpened = false;
 	private EditText edtSeach;
+	private MyAdapter aa;
+	private ArrayList<Snippet> aList;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,20 +55,83 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		Toolbar myToolbar = (Toolbar) findViewById(R.id.tool_bar);
 		setSupportActionBar(myToolbar);
+
 	}
 
 	@Override
 	protected void onResume(){
-		super.onResume();
+
 		SharedPreferences prefs = getSharedPreferences("your_file_name", MODE_PRIVATE);
 		if(!prefs.getBoolean("loggedin", false)){
-            Log.i(LOG_TAG, "Going to logging activity default");
+			Log.i(LOG_TAG, "Going to logging activity default");
 			switchActivity(LoginActivity.class);
 		}
+		aList = new ArrayList<Snippet>();
+		aa = new MyAdapter(this, R.layout.list_element_snippet, aList);
+		ListView myListView = (ListView) findViewById(R.id.listView);
+		myListView.setAdapter(aa);
+		aa.notifyDataSetChanged();
+		UserService.getCurrentUser(getApplicationContext());
+		UserService.getAllUsers(getApplicationContext());
 
-        Call<List<User>> queryResponseCall =
-                webService.loginService.getUsers();
+		super.onResume();
 	}
+
+	private void getCurrentUser(){
+		final WebService webService = new WebService(getApplicationContext());
+		Call<User> queryResponseCall =
+				webService.loginService.getUser();
+		try {
+			User user = queryResponseCall.execute().body();
+			ApplicationData.getInstance().setCurrentUser(user);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void getFeed(){
+		WebService webService = new WebService(getApplicationContext());
+		Call<List<Snippet>> queryResponseCall = webService.snippetService.getSnippets();
+		queryResponseCall.enqueue(new Callback<List<Snippet>>() {
+			@Override
+			public void onResponse(Response<List<Snippet>> response) {
+				List<Snippet> snippets = response.body();
+
+				Collections.sort(snippets, new Comparator<Snippet>() {
+					public int compare(Snippet o1, Snippet o2) {
+						return o1.getStarttime().compareTo(o2.getStarttime());
+					}
+				});
+
+				aList.clear();
+				for (int i = 0; i < snippets.size(); i++) {
+					aList.add(snippets.get(i));
+				}
+
+				// We notify the ArrayList adapter that the underlying list has changed,
+				// triggering a re-rendering of the list.
+				aa.notifyDataSetChanged();
+			}
+
+			@Override
+			public void onFailure(Throwable t) {
+				// Log error here since request failed
+			}
+		});
+	}
+
+//	private void getUsers(){
+//		WebService webService = new WebService(getApplicationContext());
+//		Call <List<User>> queryResponseCall = webService.userService.getUsers();
+//		try {
+//			List<User> users = queryResponseCall.execute().body();
+//			for(int i = 0; i < users.size(); i++) {
+//				ApplicationData.getInstance().setUser(users.get(i));
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -162,5 +242,33 @@ public class MainActivity extends AppCompatActivity {
 
 	private void doSearch() {
 
+	}
+
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	@Override
+	public void getCurrentUser(User user) {
+		TextView textView = (TextView) findViewById(R.id.textViewName);
+		textView.setText("Hi " + ApplicationData.getInstance().getCurrentUser().getName());
+	}
+
+	@Override
+	@Subscribe(threadMode = ThreadMode.MAIN)
+	public void getAllUsers(List<User> users) {
+		getFeed();
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		// Register for messages.
+		EventBus.getDefault().register(this);
+
+	}
+
+	@Override
+	public void onStop() {
+		EventBus.getDefault().unregister(this);
+
+		super.onStop();
 	}
 }
