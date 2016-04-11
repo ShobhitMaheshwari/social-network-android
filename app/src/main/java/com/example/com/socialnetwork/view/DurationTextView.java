@@ -54,7 +54,7 @@ public class DurationTextView extends TemplateTextView {
             minuteText = "less than 1 minute";
         }
 
-        String durationText = String.format(template, dayText + hourText + minuteText);
+        String durationText = String.format(template, dayText + hourText + minuteText + " ago");
         setText(Html.fromHtml(durationText), TextView.BufferType.SPANNABLE);
     }
 }

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements UserServiceInterf
 
 				Collections.sort(snippets, new Comparator<Snippet>() {
 					public int compare(Snippet o1, Snippet o2) {
-						return o1.getStarttime().compareTo(o2.getStarttime());
+						return o2.getStarttime().compareTo(o1.getStarttime());
 					}
 				});
 
@@ -270,5 +271,37 @@ public class MainActivity extends AppCompatActivity implements UserServiceInterf
 		EventBus.getDefault().unregister(this);
 
 		super.onStop();
+	}
+
+	public void postMessage(View view){
+		final EditText title = (EditText) findViewById(R.id.input_title);
+		final EditText message = (EditText) findViewById(R.id.input_message);
+
+		if((!title.getText().toString().isEmpty()) && (!message.getText().toString().isEmpty())){
+			WebService webService = new WebService(getApplicationContext());
+			Snippet snippet = new Snippet();
+			snippet.setMessage(message.getText().toString());
+			snippet.setTitle(title.getText().toString());
+			Call<Snippet> call = webService.snippetService.postSnippet(snippet);
+			call.enqueue(new Callback<Snippet>() {
+				@Override
+				public void onResponse(Response<Snippet> response) {
+					Snippet snippet1 = response.body();
+					aList.add(snippet1);
+					Collections.sort(aList, new Comparator<Snippet>() {
+						public int compare(Snippet o1, Snippet o2) {
+							return o2.getStarttime().compareTo(o1.getStarttime());
+						}
+					});
+					aa.notifyDataSetChanged();
+				}
+
+				@Override
+				public void onFailure(Throwable t) {
+
+				}
+			});
+
+		}
 	}
 }

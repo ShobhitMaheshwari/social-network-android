@@ -124,7 +124,7 @@ public class WebService {
 		@GET("snippets/")
 		Call<List<Snippet>> getSnippets();
 		@POST("snippets/")
-		Call<Snippet> postSnippet(@Field("title") String title, @Field("message") String message);
+		Call<Snippet> postSnippet(@Body Snippet snippet);
 	}
 
 	public interface UserServiceInterface {

@@ -82,7 +82,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Username of Password is not correct"
+                android:text="Username or Password is not correct"
                 android:id="@+id/textView2"
                 android:layout_alignBottom="@+id/scrollView"
                 android:layout_centerHorizontal="true"
