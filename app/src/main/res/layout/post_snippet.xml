@@ -30,12 +30,10 @@
                   android:layout_toLeftOf="@+id/btn_login"
                   android:layout_toStartOf="@+id/btn_login"/>
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_post_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
-
-            android:onClick="postMessage"
             android:text="Post"
             android:layout_alignBottom="@+id/input_message"
             android:layout_alignParentRight="true"

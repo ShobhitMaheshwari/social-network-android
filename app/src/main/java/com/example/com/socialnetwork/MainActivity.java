@@ -1,5 +1,7 @@
 package com.example.com.socialnetwork;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,8 +51,7 @@ public class MainActivity extends AppCompatActivity implements UserServiceInterf
 	private MenuItem mSearchAction;
 	private boolean isSearchOpened = false;
 	private EditText edtSeach;
-	private MyAdapter aa;
-	private ArrayList<Snippet> aList;
+
 
 	private DrawerLayout mDrawerLayout;
 
@@ -83,46 +84,11 @@ public class MainActivity extends AppCompatActivity implements UserServiceInterf
 			Log.i(LOG_TAG, "Going to logging activity default");
 			switchActivity(LoginActivity.class);
 		}
-		aList = new ArrayList<Snippet>();
-		aa = new MyAdapter(this, R.layout.list_element_snippet, aList);
-		ListView myListView = (ListView) findViewById(R.id.listView);
-		myListView.setAdapter(aa);
-		aa.notifyDataSetChanged();
+
 		UserService.getCurrentUser(getApplicationContext());
 		UserService.getAllUsers(getApplicationContext());
 
 		super.onResume();
-	}
-
-	private void getFeed(){
-		WebService webService = new WebService(getApplicationContext());
-		Call<List<Snippet>> queryResponseCall = webService.snippetService.getSnippets();
-		queryResponseCall.enqueue(new Callback<List<Snippet>>() {
-			@Override
-			public void onResponse(Response<List<Snippet>> response) {
-				List<Snippet> snippets = response.body();
-
-				Collections.sort(snippets, new Comparator<Snippet>() {
-					public int compare(Snippet o1, Snippet o2) {
-						return o2.getStarttime().compareTo(o1.getStarttime());
-					}
-				});
-
-				aList.clear();
-				for (int i = 0; i < snippets.size(); i++) {
-					aList.add(snippets.get(i));
-				}
-
-				// We notify the ArrayList adapter that the underlying list has changed,
-				// triggering a re-rendering of the list.
-				aa.notifyDataSetChanged();
-			}
-
-			@Override
-			public void onFailure(Throwable t) {
-				// Log error here since request failed
-			}
-		});
 	}
 
 	@Override
@@ -251,7 +217,11 @@ public class MainActivity extends AppCompatActivity implements UserServiceInterf
 	@Override
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void getAllUsers(List<User> users) {
-		getFeed();
+		FragmentManager fragmentManager = getFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		FeedFragment feedFragment = new FeedFragment();
+		fragmentTransaction.add(R.id.fragment_container, feedFragment);
+		fragmentTransaction.commit();
 	}
 
 	@Override
@@ -267,37 +237,6 @@ public class MainActivity extends AppCompatActivity implements UserServiceInterf
 		EventBus.getDefault().unregister(this);
 
 		super.onStop();
-	}
-
-	public void postMessage(View view){
-		final EditText title = (EditText) findViewById(R.id.input_title);
-		final EditText message = (EditText) findViewById(R.id.input_message);
-
-		if((!title.getText().toString().isEmpty()) && (!message.getText().toString().isEmpty())){
-			WebService webService = new WebService(getApplicationContext());
-			Snippet snippet = new Snippet();
-			snippet.setMessage(message.getText().toString());
-			snippet.setTitle(title.getText().toString());
-			Call<Snippet> call = webService.snippetService.postSnippet(snippet);
-			call.enqueue(new Callback<Snippet>() {
-				@Override
-				public void onResponse(Response<Snippet> response) {
-					Snippet snippet1 = response.body();
-					aList.add(snippet1);
-					Collections.sort(aList, new Comparator<Snippet>() {
-						public int compare(Snippet o1, Snippet o2) {
-							return o2.getStarttime().compareTo(o1.getStarttime());
-						}
-					});
-					aa.notifyDataSetChanged();
-				}
-
-				@Override
-				public void onFailure(Throwable t) {
-
-				}
-			});
-		}
 	}
 
 	private void setupDrawerContent(NavigationView navigationView) {
